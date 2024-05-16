@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle Game</title>
+    <style>
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+        .puzzle-piece {
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .puzzle-piece:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="puzzle-container" id="puzzle-container">
+        <div class="puzzle-piece" onclick="movePiece(0, 0)" id="piece-0">1</div>
+        <div class="puzzle-piece" onclick="movePiece(0, 1)" id="piece-1">2</div>
+        <div class="puzzle-piece" onclick="movePiece(0, 2)" id="piece-2">3</div>
+        <div class="puzzle-piece" onclick="movePiece(1, 0)" id="piece-3">4</div>
+        <div class="puzzle-piece" onclick="movePiece(1, 1)" id="piece-4">5</div>
+        <div class="puzzle-piece" onclick="movePiece(1, 2)" id="piece-5">6</div>
+        <div class="puzzle-piece" onclick="movePiece(2, 0)" id="piece-6">7</div>
+        <div class="puzzle-piece" onclick="movePiece(2, 1)" id="piece-7">8</div>
+        <div class="puzzle-piece" onclick="movePiece(2, 2)" id="piece-8"></div>
+    </div>
+
+    <script>
+        // 초기 퍼즐 순서
+        const initialOrder = [1, 2, 3, 4, 5, 6, 7, 8, ''];
+
+        // 퍼즐 섞기
+        function shuffle() {
+            for (let i = 0; i < initialOrder.length - 1; i++) {
+                const randomIndex = Math.floor(Math.random() * (i + 1));
+                [initialOrder[i], initialOrder[randomIndex]] = [initialOrder[randomIndex], initialOrder[i]];
+            }
+            updatePuzzle();
+        }
+
+        // 퍼즐 업데이트
+        function updatePuzzle() {
+            for (let i = 0; i < initialOrder.length; i++) {
+                const piece = document.getElementById(`piece-${i}`);
+                piece.innerText = initialOrder[i] !== '' ? initialOrder[i] : '';
+            }
+        }
+
+        // 클릭한 퍼즐 조각 이동
+        function movePiece(row, col) {
+            const emptyIndex = initialOrder.indexOf('');
+            const clickedIndex = row * 3 + col;
+            const rowDiff = Math.abs(Math.floor(emptyIndex / 3) - row);
+            const colDiff = Math.abs(emptyIndex % 3 - col);
+            
+            if ((rowDiff === 1 && colDiff === 0) || (colDiff === 1 && rowDiff === 0)) {
+                [initialOrder[emptyIndex], initialOrder[clickedIndex]] = [initialOrder[clickedIndex], initialOrder[emptyIndex]];
+                updatePuzzle();
+            }
+        }
+
+        // 초기 퍼즐 섞기
+        shuffle();
+    </script>
+</body>
+</html>
